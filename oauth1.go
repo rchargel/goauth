@@ -31,7 +31,7 @@ const (
 	oauthVerifier        = "oauth_verifier"
 )
 
-var tokenMap = make(map[string]token)
+var tokenCtx = newTokenCache(1000, 300)
 
 // NewOAuth1ServiceProvider initializes a new OAuth 2.0 service provider.
 func NewOAuth1ServiceProvider(config OAuth1ServiceProviderConfig) OAuthServiceProvider {
@@ -122,7 +122,7 @@ func (provider *OAuth1ServiceProvider) GetRedirectURL() (string, error) {
 	var url string
 	token, err := provider.fetchOAuthRequestToken()
 	if err == nil {
-		tokenMap[token.token] = token
+		tokenCtx.addToken(token)
 		url = fmt.Sprintf("%v?%v=%v", provider.config.AuthURL, oauthToken, token.token)
 	}
 	return url, err
@@ -136,7 +136,7 @@ func (provider *OAuth1ServiceProvider) ProcessResponse(request *http.Request) (U
 	tokenString := request.FormValue(oauthToken)
 	verifier := request.FormValue(oauthVerifier)
 	if len(tokenString) > 0 && len(verifier) > 0 {
-		if token, found := tokenMap[tokenString]; found {
+		if token, err := tokenCtx.getToken(tokenString); err == nil {
 			accessToken, err := provider.fetchOAuthAccessToken(token, verifier)
 			if err != nil {
 				return user, err
