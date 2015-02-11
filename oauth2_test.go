@@ -1,11 +1,12 @@
 package goauth
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
-func TestNewOAuth2ServiceProvider(t *testing.T) {
-	providerMap := make(map[string]interface{})
-
-	providerMap["google"] = OAuth2ServiceProviderConfig{
+var providerMap = map[string]interface{}{
+	"google": OAuth2ServiceProviderConfig{
 		ProviderName: "GOOGLE",
 		ClientID:     "CLIENT_ID",
 		ClientSecret: "CLIENT_SECRET",
@@ -14,8 +15,8 @@ func TestNewOAuth2ServiceProvider(t *testing.T) {
 		UserInfoURL:  "https://www.googleapis.com/oauth2/v2/userinfo",
 		RedirectURL:  "http://myserver.com/oauth/cahttps://www.facebook.com/dialog/oauthllback/google",
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"},
-	}
-	providerMap["facebook"] = OAuth2ServiceProviderConfig{
+	},
+	"facebook": OAuth2ServiceProviderConfig{
 		ProviderName: "FACEBOOK",
 		ClientID:     "CLIENT_ID",
 		ClientSecret: "CLIENT_SECRET",
@@ -24,8 +25,10 @@ func TestNewOAuth2ServiceProvider(t *testing.T) {
 		UserInfoURL:  "https://graph.facebook.com/me?fields=id,first_name,middle_name,last_name,email,picture",
 		RedirectURL:  "http://myserver.com/oauth/callback/facebook",
 		Scopes:       []string{"public_profile", "email"},
-	}
+	},
+}
 
+func TestNewOAuth2ServiceProvider(t *testing.T) {
 	provider1 := NewOAuth2ServiceProvider(providerMap["facebook"].(OAuth2ServiceProviderConfig))
 	provider2 := NewOAuth2ServiceProvider(providerMap["google"].(OAuth2ServiceProviderConfig))
 
@@ -43,5 +46,27 @@ func TestNewOAuth2ServiceProvider(t *testing.T) {
 	default:
 		t.Logf("Invalid type %v.", v)
 		t.Fail()
+	}
+}
+
+func TestGetRedirectURL(t *testing.T) {
+	provider1 := NewOAuth2ServiceProvider(providerMap["facebook"].(OAuth2ServiceProviderConfig))
+	provider2 := NewOAuth2ServiceProvider(providerMap["google"].(OAuth2ServiceProviderConfig))
+
+	url1, err := provider1.GetRedirectURL()
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	if !strings.Contains(url1, "https://www.facebook.com/dialog/oauth") {
+		t.Logf("Url %v is not valid.", url1)
+	}
+	url2, err := provider2.GetRedirectURL()
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	if !strings.Contains(url2, "https://accounts.google.com") {
+		t.Logf("Url %v is not valid.", url2)
 	}
 }
