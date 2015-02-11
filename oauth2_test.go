@@ -13,7 +13,7 @@ var providerMap = map[string]interface{}{
 		AuthURL:      "https://accounts.google.com/o/oauth2/auth",
 		TokenURL:     "https://accounts.google.com/o/oauth2/token",
 		UserInfoURL:  "https://www.googleapis.com/oauth2/v2/userinfo",
-		RedirectURL:  "http://myserver.com/oauth/cahttps://www.facebook.com/dialog/oauthllback/google",
+		RedirectURL:  "http://myserver.com/oauth/callback/google",
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"},
 	},
 	"facebook": OAuth2ServiceProviderConfig{

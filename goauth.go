@@ -8,28 +8,62 @@
 // This package provides two OAuth implementations, Version 1.0 and Version 2.0.
 // For version 2.0 implementations the sequence of events is fairly straightforward.
 //
-//     Browser                  Server                Provider
-//        |                        |                      |
-//        # GET: /oauth/provider   |                      |
-//        #=======================>#                      |
-//        |          Send Redirect #                      |
-//        #<=======================#                      |
-//        # Redirect to provider login                    |
-//        #========================|=====================>#
-//        |                        |                      # User logs in
-//        |                      Redirect to callback URL #
-//        #<=======================|======================#
-//        # GET: Callback URL      |                      |
-//        #=======================>#                      |
-//        |                        # GET: User Info       |
-//        |                        #=====================>#
-//        |                        #<=====================#
-//        |                        # Process User         |
-//        |                        # Create Session       |
-//        |        Respond To User #                      |
-//        #<=======================#                      |
-//        #                        |                      |
+//     Browser                    Server                   Provider
+//        |                          |                          |
+//        # GET: /oauth/provider     |                          |
+//        #==>==>==>==>==>==>==>==>=>#                          |
+//        |            Send Redirect #                          |
+//        #<=<==<==<==<==<==<==<==<==#                          |
+//        # Redirect to provider login                          |
+//        #==>==>==>==>==>==>==>==>==|==>==>==>==>==>==>==>==>=>#
+//        |                          |                          # User logs in
+//        |                          | Redirect to callback URL #
+//        #<=<==<==<==<==<==<==<==<==|==<==<==<==<==<==<==<==<==#
+//        # GET: Callback URL        |                          |
+//        #==>==>==>==>==>==>==>==>=>#                          |
+//        |                          # GET: User Info           |
+//        |                          #==>==>==>==>==>==>==>==>=>#
+//        |                          #<=<==<==<==<==<==<==<==<==#
+//        |                          # Process User             |
+//        |                          # Create Session           |
+//        |          Respond To User #                          |
+//        #<=<==<==<==<==<==<==<==<==#                          |
+//        #                          |                          |
 //
+// For version 1.0 implementations the sequence of events is slightly more complex,
+// however most of that complexity is hidden from you by the API.
+//
+//     Browser                    Server                    Provider
+//        |                          |                          |
+//        # GET: /oauth/provider     |                          |
+//        #==>==>==>==>==>==>==>==>=>#                          |
+//        |                          # Fetch OAuth Token        |
+//        |                          #==>==>==>==>==>==>==>==>=>#
+//        |                          #                          # Auth Request
+//        |                          #  Return Token and Secret #
+//        |                          #<=<==<==<==<==<==<==<==<==#
+//        |            Send Redirect #                          |
+//        #<=<==<==<==<==<==<==<==<==#                          |
+//        # Redirect to provider login                          |
+//        #==>==>==>==>==>==>==>==>==|==>==>==>==>==>==>==>==>=>#
+//        |                          |                          # User logs in
+//        |                          | Redirect to callback URL #
+//        #<=<==<==<==<==<==<==<==<==|==<==<==<==<==<==<==<==<==#
+//        # GET: Callback URL        |                          |
+//        #==>==>==>==>==>==>==>==>=>#                          |
+//        |                          # Fetch Access Token       |
+//        |                          #==>==>==>==>==>==>==>==>=>#
+//        |                          #                          # Auth Request
+//        |                          #      Return Access Token #
+//        |                          #<=<==<==<==<==<==<==<==<==#
+//        |                          # GET: User Info           |
+//        |                          #==>==>==>==>==>==>==>==>=>#
+//        |                          #<=<==<==<==<==<==<==<==<==#
+//        |                          # Process User             |
+//        |                          # Create Session           |
+//        |          Respond To User #                          |
+//        #<=<==<==<==<==<==<==<==<==#                          |
+//        #                          |                          |
 package goauth
 
 import (
@@ -60,8 +94,8 @@ const (
 )
 
 // UserData is a wrapper for the output of the authorization process.  The
-// UserData object will have as much information about the user as this service
-// can provide.
+// UserData struct will have as much information about the user as this service
+// can provide. This means that not all properties of this struct will be set.
 type UserData struct {
 	UserID         string
 	Email          string
@@ -91,6 +125,24 @@ type OAuthServiceProvider interface {
 	// This method will receive a message back from the OAuth provider containing
 	// information about the now authenticated user.
 	ProcessResponse(requet *http.Request) (UserData, error)
+}
+
+// String prints the formatted contents of UserData.
+func (u UserData) String() string {
+	return fmt.Sprintf(`UserData {
+	UserID:         %v,
+	Email:          %v,
+	FullName:       %v,
+	GivenName:      %v,
+	FamilyName:     %v,
+	ScreenName:     %v,
+	PhotoURL:       %v,
+	OAuthProvider:  %v,
+	OAuthVersion:   %v,
+	OAuthToken:     %v,
+	OAuthTokenType: %v
+}`, u.UserID, u.Email, u.FullName, u.GivenName, u.FamilyName, u.ScreenName,
+		u.PhotoURL, u.OAuthProvider, u.OAuthVersion, u.OAuthToken, u.OAuthTokenType)
 }
 
 func toUserData(data map[string]interface{}) UserData {
