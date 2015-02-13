@@ -1,5 +1,7 @@
 # Goauth for Go
 
+[![Build Status](https://travis-ci.org/rchargel/goauth.svg?branch=master)](https://travis-ci.org/rchargel/goauth)
+
 The `goauth` package contains a simplified implementation of OAuth 1.0
 and OAuth 2.0 spec for the Go programming language.
 
