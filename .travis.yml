@@ -5,10 +5,8 @@ go:
   - 1.4
 
 install:
-  - export GOPATH="$HOME/gopath"
-  - mkdir -p "$GOPATH/src/github.com/rchargel/goauth"
-  - mv "$TRAVIS_BUILD_DIR" "$GOPATH/src/github.com/rchargel/goauth"
-  - go get -v -t -d github.com/rchargel/goauth/...
+  - go get -v -t -d golang.org/x/oauth2/...
+  - go get -v github.com/rchargel/goauth
 
 script:
-  - go test -v github.com/rchargel/goauth/...
+  - go test -v github.com/rchargel/goauth
