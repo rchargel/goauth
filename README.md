@@ -80,3 +80,17 @@ complex, however most of that complexity is hidden from you by the API.
 	   |          Respond To User #                          |
 	   #<=<==<==<==<==<==<==<==<==#                          |
 	   #                          |                          |
+
+# Testing
+
+So far, I have only tested this API with the following OAuth Providers:
+
+* **OAuth 2.0**
+  * Google
+  * Facebook
+* **OAuth 1.0**
+  * Twitter
+
+# Contact Me
+
+Contact me with any questions or comments through my website: [http://zcarioca.net](http://zcarioca.net).

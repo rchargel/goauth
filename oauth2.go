@@ -154,8 +154,10 @@ func (provider *OAuth2ServiceProvider) validateStateFlag(request *http.Request) 
 		if dur.Seconds() > oauth2StateFlagMaxAgeSeconds {
 			return fmt.Errorf(oauth2StateFlagError, "timed out")
 		}
+	} else {
+		return errors.New("Could not validate state flag: no flag found in the request.")
 	}
-	return errors.New("Could not validate state flag: no flag found in the request.")
+	return nil
 }
 
 func generateStateFlag(provider string) string {

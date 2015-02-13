@@ -216,7 +216,7 @@ func (provider *OAuth1ServiceProvider) fetchUserInfo(accessToken token, verifier
 	baseStringParamOrder := []string{oauthConsumerKey, oauthNonce, oauthSignatureMethod, oauthTimestamp, oauthToken, oauthVersion}
 	baseString := provider.createBaseString(provider.config.UserInfoVerb, provider.config.UserInfoURL, toParamList(params, baseStringParamOrder))
 
-	methodSignature := provider.createMethodSignature(baseString, accessToken.token, accessToken.secret)
+	methodSignature := provider.createMethodSignature(baseString, provider.config.ClientSecret, accessToken.secret)
 	params[oauthSignature] = methodSignature
 
 	var data []byte
@@ -328,7 +328,7 @@ func (provider *OAuth1ServiceProvider) generateParams(token, secret, verifier st
 
 	params[oauthCallback] = provider.config.RedirectURL
 	params[oauthConsumerKey] = provider.config.ClientID
-	params[oauthNonce] = fmt.Sprintf("%v %v", time.Now().Unix(), rand.Intn(100))
+	params[oauthNonce] = fmt.Sprintf("%v%v", time.Now().Unix(), rand.Intn(100)+rand.Intn(100)*12)
 	params[oauthSignatureMethod] = "HMAC-SHA1"
 	params[oauthTimestamp] = fmt.Sprint(time.Now().Unix())
 	params[oauthVersion] = OAuthVersion1

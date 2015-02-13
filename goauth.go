@@ -180,6 +180,11 @@ func toUserData(data map[string]interface{}) UserData {
 	} else if picture, found = data["profile_image_url"]; found {
 		user.PhotoURL = picture.(string)
 	}
+	if len(user.FullName) == 0 {
+		if len(user.FamilyName) > 0 {
+			user.FullName = fmt.Sprintf("%v %v", user.GivenName, user.FamilyName)
+		}
+	}
 	if len(user.ScreenName) == 0 {
 		if len(user.FullName) > 0 {
 			user.ScreenName = user.FullName
