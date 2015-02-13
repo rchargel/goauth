@@ -11,6 +11,15 @@ and OAuth 2.0 spec for the Go programming language.
 
     import "github.com/rchargel/goauth"
 
+# Documentation
+
+The package documentation can be found at
+[http://godoc.org/github.com/rchargel/goauth](http://godoc.org/github.com/rchargel/goauth).
+
+# Dependencies
+
+* `golang.org/x/oauth2` - the OAuth 2.0 service provider wraps this API.
+
 # Implementation Description
 
 Package goauth is a simple to use and implement tool to configure OAuth
