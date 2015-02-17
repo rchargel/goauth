@@ -150,6 +150,16 @@ func (provider *OAuth1ServiceProvider) ProcessResponse(request *http.Request) (U
 	return user, errors.New("Invalid request: missing token or verifier.")
 }
 
+// GetOAuthVersion gets the version of OAuth implemented by this provider.
+func (provider *OAuth1ServiceProvider) GetOAuthVersion() string {
+	return OAuthVersion1
+}
+
+// GetProviderName gets the name of of the OAuth provider.
+func (provider *OAuth1ServiceProvider) GetProviderName() string {
+	return provider.config.ProviderName
+}
+
 func (provider *OAuth1ServiceProvider) fetchOAuthRequestToken() (token, error) {
 	params := provider.generateParams("", "", "")
 

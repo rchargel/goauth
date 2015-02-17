@@ -125,6 +125,12 @@ type OAuthServiceProvider interface {
 	// This method will receive a message back from the OAuth provider containing
 	// information about the now authenticated user.
 	ProcessResponse(requet *http.Request) (UserData, error)
+
+	// GetOAuthVersion gets the version of OAuth implemented by this provider.
+	GetOAuthVersion() string
+
+	// GetProviderName gets the name of of the OAuth provider.
+	GetProviderName() string
 }
 
 // String prints the formatted contents of UserData.

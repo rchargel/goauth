@@ -21,6 +21,7 @@ The package documentation can be found at
 # Dependencies
 
 * `golang.org/x/oauth2` - the OAuth 2.0 service provider wraps this API.
+* `gopkg.in/yaml.v2` - a YAML file reader.
 
 # Implementation Description
 

@@ -126,6 +126,16 @@ func (provider *OAuth2ServiceProvider) ProcessResponse(request *http.Request) (U
 	return user, errors.New("No oauth 2.0 code parameter found in the request.")
 }
 
+// GetOAuthVersion gets the version of OAuth implemented by this provider.
+func (provider *OAuth2ServiceProvider) GetOAuthVersion() string {
+	return OAuthVersion2
+}
+
+// GetProviderName gets the name of of the OAuth provider.
+func (provider *OAuth2ServiceProvider) GetProviderName() string {
+	return provider.providerName
+}
+
 func (provider *OAuth2ServiceProvider) validateStateFlag(request *http.Request) error {
 	stateFlag := request.FormValue(oauth2StateFlag)
 	// checks to make sure the state flag is in the request
