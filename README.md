@@ -18,6 +18,9 @@ and OAuth 2.0 spec for the Go programming language.
 The package documentation can be found at
 [http://godoc.org/github.com/rchargel/goauth](http://godoc.org/github.com/rchargel/goauth).
 
+Here is the [project page](http://zcarioca.net/proj/goauth) and a
+[quick tutorial](http://zcarioca.net/blog/goauth).
+
 # Dependencies
 
 * `golang.org/x/oauth2` - the OAuth 2.0 service provider wraps this API.
